@@ -31,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void save(Customer customer) {
-        customerRepository.save(customer);
+        customerRepository.save(customer); /*Báo lỗi dòng này*/
     }
 
     @Override

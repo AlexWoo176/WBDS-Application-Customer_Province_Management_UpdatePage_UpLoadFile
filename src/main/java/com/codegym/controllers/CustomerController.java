@@ -36,7 +36,7 @@ public class CustomerController {
 
     @PostMapping("/create-customer")
     public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer){
-        customerService.save(customer);
+        customerService.save(customer); /*Báo lỗi dòng này*/
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer", new Customer());
         modelAndView.addObject("message", "New customer created successfully");
@@ -55,6 +55,7 @@ public class CustomerController {
         }
         ModelAndView modelAndView = new ModelAndView("/customer/list");
         modelAndView.addObject("customers", customers);
+        modelAndView.addObject("customer", new Customer());
         return modelAndView;
     }
 //    @GetMapping("/customers")

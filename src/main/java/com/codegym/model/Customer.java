@@ -12,8 +12,8 @@ public class Customer {
     private String firstName;
     private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name = "province_id")
+    @OneToOne
+//    @JoinColumn(name = "province_id")
     private Province province;
 
     public Province getProvince() {
