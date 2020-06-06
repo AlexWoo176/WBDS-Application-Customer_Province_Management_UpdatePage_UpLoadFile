@@ -6,6 +6,7 @@ import com.codegym.services.CustomerService;
 import com.codegym.services.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,8 @@ public class CustomerController {
     }
 
     @PostMapping("/create-customer")
-    public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer) {
+    public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer){
         customerService.save(customer);
-
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer", new Customer());
         modelAndView.addObject("message", "New customer created successfully");
@@ -44,10 +44,12 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public ModelAndView listCustomers(@RequestParam("s") Optional<String> s, Pageable pageable) {
+    public ModelAndView listCustomers(@RequestParam("s") Optional<String> s,@RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "5") int size){
+        Pageable pageable = new PageRequest(page,size);
         Page<Customer> customers;
-        if (s.isPresent()) {
-           customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
+        if(s.isPresent()){
+            customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
         } else {
             customers = customerService.findAll(pageable);
         }
@@ -55,6 +57,18 @@ public class CustomerController {
         modelAndView.addObject("customers", customers);
         return modelAndView;
     }
+//    @GetMapping("/customers")
+//    public ModelAndView listCustomers(@PageableDefault(size = 10) @RequestParam("s") Optional<String> s, Pageable pageable) {
+//        Page<Customer> customers;
+//        if (s.isPresent()) {
+//           customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
+//        } else {
+//            customers = customerService.findAll(pageable);
+//        }
+//        ModelAndView modelAndView = new ModelAndView("/customer/list");
+//        modelAndView.addObject("customers", customers);
+//        return modelAndView;
+//    }
 
     @GetMapping("/edit-customer/{id}")
     public ModelAndView showEditForm(@PathVariable Long id) {

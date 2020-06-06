@@ -4,9 +4,9 @@ import com.codegym.model.Province;
 import com.codegym.repositories.ProvinceRepository;
 import com.codegym.services.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+
+
 public class ProvinceServiceImpl implements ProvinceService {
 
     @Autowired
