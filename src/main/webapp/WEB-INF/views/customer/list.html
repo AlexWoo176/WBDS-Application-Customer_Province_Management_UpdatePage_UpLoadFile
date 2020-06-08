@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="/customer/layout::head">
     <meta charset="UTF-8">
     <title>Customers</title>
+<!--    <link href="/styles/style.css" th:href="@{/styles/style.css}" rel="stylesheet">-->
 </head>
 <body>
 <a href="/create-customer">Create New Customer</a>
@@ -41,5 +42,6 @@
     <span th:text="${customers.number + 1}"></span>/<span th:text="${customers.totalPages}"></span>
     <a th:href="@{'/customers'(page=${customers.number + 1})}" th:if="${customers.hasNext()}">Next</a>
 </div>
+<footer th:replace="/customer/layout :: footer"></footer>
 </body>
 </html>

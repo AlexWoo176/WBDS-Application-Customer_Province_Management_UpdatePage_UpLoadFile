@@ -56,8 +56,14 @@ public class WebConfiguration extends WebMvcConfigurerAdapter implements Applica
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String fileUpload = env.getProperty("file_upload").toString();
+
+        // Image resource.
         registry.addResourceHandler("/i/**") //
                 .addResourceLocations("file:" + fileUpload);
+
+        // Css resource.
+        registry.addResourceHandler("/styles/**") //
+                .addResourceLocations("/WEB-INF/resources/css/");
     }
 
     private ApplicationContext applicationContext;

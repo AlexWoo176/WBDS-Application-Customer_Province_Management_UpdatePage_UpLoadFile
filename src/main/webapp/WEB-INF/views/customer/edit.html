@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="/customer/layout::head">
     <meta charset="UTF-8">
     <title>Edit Customer</title>
 </head>
@@ -49,5 +49,6 @@
         </tr>
     </table>
 </form>
+<footer th:replace="/customer/layout :: footer"></footer>
 </body>
 </html>
