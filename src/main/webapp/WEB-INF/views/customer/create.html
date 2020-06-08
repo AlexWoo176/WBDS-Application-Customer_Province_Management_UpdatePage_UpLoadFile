@@ -6,13 +6,11 @@
 </head>
 <body>
 <h1>Create Customer</h1>
-<p>
-    <a href="/customers">Customer List</a>
-</p>
+<p><a href="/customers">Customer List</a></p>
 <th:block th:if="${message}">
     <p th:text="${message}"></p>
 </th:block>
-<form th:action="@{/create-customer}" th:object="${customer}" method="post">
+<form th:action="@{/create-customer}" th:object="${customerForm}" method="post" enctype="multipart/form-data">
     <table id="customers">
         <tr>
             <td>First name:</td>
@@ -21,6 +19,10 @@
         <tr>
             <td>Last name:</td>
             <td><input type="text" th:field="*{lastName}"/></td>
+        </tr>
+        <tr>
+            <td>Image:</td>
+            <td><input type="file" th:field="*{image}" multiple/></td>
         </tr>
         <tr>
             <td>Province:</td>

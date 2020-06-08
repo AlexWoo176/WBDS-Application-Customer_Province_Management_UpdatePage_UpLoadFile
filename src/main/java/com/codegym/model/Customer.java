@@ -12,8 +12,11 @@ public class Customer {
     private String firstName;
     private String lastName;
 
-    @OneToOne
-//    @JoinColumn(name = "province_id")
+    //add Images
+    private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "province_id")
     private Province province;
 
     public Province getProvince() {
@@ -27,9 +30,33 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName) {
+//    public Customer(String firstName, String lastName) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//    }
+
+
+    public Customer(Long id, String firstName, String lastName, String image, Province province) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.image = image;
+        this.province = province;
+    }
+
+    public Customer(String firstName, String lastName, String image) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.image = image;
+    }
+
+    public Customer(String firstName, String lastName, String image, Province province) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.image = image;
+        this.province = province;
     }
 
     public Long getId() {
@@ -56,8 +83,16 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
-        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", id, firstName, lastName);
+        return String.format("Customer[id=%d, firstName='%s', lastName='%s', image='%s']", id, firstName, lastName, image);
     }
 }

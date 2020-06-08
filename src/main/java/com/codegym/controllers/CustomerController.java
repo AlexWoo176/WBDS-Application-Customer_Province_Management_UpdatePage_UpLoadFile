@@ -1,26 +1,38 @@
 package com.codegym.controllers;
 
 import com.codegym.model.Customer;
+import com.codegym.model.CustomerForm;
 import com.codegym.model.Province;
 import com.codegym.services.CustomerService;
 import com.codegym.services.ProvinceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
+@PropertySource("classpath:config_app.properties")
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
     @Autowired
     private ProvinceService provinceService;
+
+    @Autowired
+    Environment env;
 
     @ModelAttribute("provinces")
     public Iterable<Province> provinces() {
@@ -30,22 +42,38 @@ public class CustomerController {
     @GetMapping("/create-customer")
     public ModelAndView showCreateForm() {
         ModelAndView modelAndView = new ModelAndView("/customer/create");
-        modelAndView.addObject("customer", new Customer());
+        modelAndView.addObject("customerForm", new CustomerForm());
         return modelAndView;
     }
 
     @PostMapping("/create-customer")
-    public ModelAndView saveCustomer(@ModelAttribute("customer") Customer customer){
-        customerService.save(customer); /*Báo lỗi dòng này*/
+    public ModelAndView saveCustomer(@ModelAttribute("customerForm") CustomerForm customerForm, BindingResult result){
+        if (result.hasErrors()) {
+            System.out.println("Result Error Occured" + result.getAllErrors());
+        }
+
+        MultipartFile multipartFile = customerForm.getImage();
+        String fileName = multipartFile.getOriginalFilename();
+        String fileUpload = env.getProperty("file_upload").toString();
+
+        try {
+            FileCopyUtils.copy(customerForm.getImage().getBytes(), new File(fileUpload + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Customer customerObject = new Customer(customerForm.getFirstName(), customerForm.getLastName(), fileName, customerForm.getProvince());
+
+        customerService.save(customerObject);
         ModelAndView modelAndView = new ModelAndView("/customer/create");
         modelAndView.addObject("customer", new Customer());
         modelAndView.addObject("message", "New customer created successfully");
         return modelAndView;
     }
-
+    
     @GetMapping("/customers")
     public ModelAndView listCustomers(@RequestParam("s") Optional<String> s,@RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "5") int size){
+                                      @RequestParam(defaultValue = "4") int size){
         Pageable pageable = new PageRequest(page,size);
         Page<Customer> customers;
         if(s.isPresent()){

@@ -11,12 +11,15 @@
     Search by first name:
     <input name="s" type="text"/>
     <input type="submit" value="Search"/>
-</form><br/>
+</form>
+<br/>
+<p><a href="/customers">Customer List</a></p>
 <table id="customers" border="1">
     <tr>
         <th>#</th>
         <th>First name</th>
         <th>Last name</th>
+        <th>Image</th>
         <th>Province</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -26,7 +29,8 @@
             <td th:text="${customer.id}"></td>
             <td th:text="${customer.firstName}"></td>
             <td th:text="${customer.lastName}"></td>
-            <td th:text="${customer.province.name}"></td>
+            <td><img width="150px" height="150px" th:src="@{'/i/' + ${customer.getImage()}}"/></td>
+            <td th:text="${customer.getProvince().getName()}"></td>
             <td><a th:href="@{/edit-customer/__${customer.id}__ }">Edit</a></td>
             <td><a th:href="@{/delete-customer/__${customer.id}__ }">Delete</a></td>
         </tr>
