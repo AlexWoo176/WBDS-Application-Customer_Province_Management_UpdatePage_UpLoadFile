@@ -20,6 +20,13 @@ public class CustomerForm {
         this.province = province;
     }
 
+    public CustomerForm(String firstName, String lastName, MultipartFile image, Province province) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.image = image;
+        this.province = province;
+    }
+
     public Long getId() {
         return id;
     }

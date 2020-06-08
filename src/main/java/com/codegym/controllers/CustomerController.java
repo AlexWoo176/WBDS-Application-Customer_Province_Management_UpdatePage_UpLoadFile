@@ -66,7 +66,7 @@ public class CustomerController {
 
         customerService.save(customerObject);
         ModelAndView modelAndView = new ModelAndView("/customer/create");
-        modelAndView.addObject("customer", new Customer());
+        modelAndView.addObject("customer", new CustomerForm());
         modelAndView.addObject("message", "New customer created successfully");
         return modelAndView;
     }
@@ -86,27 +86,16 @@ public class CustomerController {
         modelAndView.addObject("customer", new Customer());
         return modelAndView;
     }
-//    @GetMapping("/customers")
-//    public ModelAndView listCustomers(@PageableDefault(size = 10) @RequestParam("s") Optional<String> s, Pageable pageable) {
-//        Page<Customer> customers;
-//        if (s.isPresent()) {
-//           customers = customerService.findAllByFirstNameContaining(s.get(), pageable);
-//        } else {
-//            customers = customerService.findAll(pageable);
-//        }
-//        ModelAndView modelAndView = new ModelAndView("/customer/list");
-//        modelAndView.addObject("customers", customers);
-//        return modelAndView;
-//    }
 
     @GetMapping("/edit-customer/{id}")
     public ModelAndView showEditForm(@PathVariable Long id) {
         Customer customer = customerService.findById(id);
         if (customer != null) {
+            CustomerForm customerForm = new CustomerForm(customer.getId(), customer.getFirstName(), customer.getLastName(), null, customer.getProvince());
             ModelAndView modelAndView = new ModelAndView("/customer/edit");
+            modelAndView.addObject("customerForm", customerForm);
             modelAndView.addObject("customer", customer);
             return modelAndView;
-
         } else {
             ModelAndView modelAndView = new ModelAndView("/error.404");
             return modelAndView;
@@ -114,10 +103,26 @@ public class CustomerController {
     }
 
     @PostMapping("/edit-customer")
-    public ModelAndView updateCustomer(@ModelAttribute("customer") Customer customer) {
-        customerService.save(customer);
+    public ModelAndView updateCustomer(@ModelAttribute("customerForm") CustomerForm customerForm, BindingResult result) {
+
+        if (result.hasErrors()) {
+            System.out.println("Result Error Occured" + result.getAllErrors());
+        }
+
+        MultipartFile multipartFile = customerForm.getImage();
+        String fileName = multipartFile.getOriginalFilename();
+
+        try {
+            FileCopyUtils.copy(customerForm.getImage().getBytes(), new File(env.getProperty("file_upload") + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Customer customerObject = new Customer(customerForm.getId(), customerForm.getFirstName(), customerForm.getLastName(), fileName, customerForm.getProvince());
+
+        customerService.save(customerObject);
         ModelAndView modelAndView = new ModelAndView("/customer/edit");
-        modelAndView.addObject("customer", customer);
+        modelAndView.addObject("customer", new CustomerForm());
         modelAndView.addObject("message", "Customer updated successfully");
         return modelAndView;
     }

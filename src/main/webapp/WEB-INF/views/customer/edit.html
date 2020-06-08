@@ -12,7 +12,7 @@
 <th:block th:if="${message}">
     <p th:text="${message}"></p>
 </th:block>
-<form th:action="@{/edit-customer}" th:object="${customer}" method="post">
+<form th:action="@{/edit-customer}" th:object="${customerForm}" method="post" enctype="multipart/form-data">
     <input th:type="hidden" name="id" th:field="*{id}">
     <table>
         <tr>
@@ -22,6 +22,15 @@
         <tr>
             <td>Last name:</td>
             <td><input type="text" th:field="*{lastName}"/></td>
+        </tr>
+        <tr>
+            <td>Image:</td>
+            <td>
+                <img width="150px" height="150px" th:src="@{'/i/' + ${customer.getImage()}}"/>
+<!--                <img width="150px" height="150px" th:src="@{'/i/' + ${customer.getImage()}}">-->
+
+                <input type="file" th:field="*{image}" multiple/>
+            </td>
         </tr>
         <tr>
             <td>Province:</td>
