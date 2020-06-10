@@ -27,8 +27,6 @@
             <td>Image:</td>
             <td>
                 <img width="150px" height="150px" th:src="@{'/i/' + ${customer.getImage()}}"/>
-<!--                <img width="150px" height="150px" th:src="@{'/i/' + ${customer.getImage()}}">-->
-
                 <input type="file" th:field="*{image}" multiple/>
             </td>
         </tr>

@@ -122,7 +122,9 @@ public class CustomerController {
 
         customerService.save(customerObject);
         ModelAndView modelAndView = new ModelAndView("/customer/edit");
-        modelAndView.addObject("customer", new CustomerForm());
+
+        modelAndView.addObject("customerForm", customerForm);
+        modelAndView.addObject("customer", customerObject);
         modelAndView.addObject("message", "Customer updated successfully");
         return modelAndView;
     }
